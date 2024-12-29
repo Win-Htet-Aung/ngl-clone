@@ -1,4 +1,4 @@
-from src.database import Base
+from database import Base
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
@@ -8,6 +8,9 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
+
+    def __str__(self):
+        return f"username: {self.username}, id: {self.id}"
 
 
 class Category(Base):
@@ -23,9 +26,7 @@ class Link(Base):
     id = Column(Integer, primary_key=True, index=True)
     url = Column(String, unique=True, index=True)
     category_id = Column(Integer, ForeignKey("categories.id"))
-    category = relationship("Category", back_populates="links")
     user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User", back_populates="links")
     created_at = Column(DateTime, nullable=False)
 
 
@@ -35,5 +36,4 @@ class Message(Base):
     id = Column(Integer, primary_key=True, index=True)
     content = Column(String)
     link_id = Column(Integer, ForeignKey("links.id"))
-    link = relationship("Link", back_populates="messages")
     created_at = Column(DateTime, nullable=False)
